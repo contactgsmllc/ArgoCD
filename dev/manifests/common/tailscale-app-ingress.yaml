@@ -1,0 +1,22 @@
+# Exposes the app on the tailnet as https://hoa-app.tailfc43ba.ts.net
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tailscale-app-ingress
+  annotations:
+    tailscale.com/proxy-group: ingress-proxies
+spec:
+  ingressClassName: tailscale
+  tls:
+    - hosts:
+        - hoa-app
+  rules:
+    - http:
+        paths:
+          - { path: /users,        pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /api,          pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /platform,     pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /subscription, pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /swagger-ui,   pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /v3/api-docs,  pathType: Prefix, backend: { service: { name: society-backend-service,  port: { number: 8080 } } } }
+          - { path: /,             pathType: Prefix, backend: { service: { name: society-frontend-service, port: { number: 80 } } } }

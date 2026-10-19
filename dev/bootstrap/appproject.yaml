@@ -1,0 +1,15 @@
+# Restricts the society apps: they can only deploy into the "society" namespace,
+# only from this repo, and cannot create cluster-wide resources.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: society
+  namespace: argocd
+spec:
+  description: HOA / society application (dev cluster)
+  sourceRepos:
+    - git@github.com:contactgsmllc/ArgoCD.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: society
+  clusterResourceWhitelist: []        # no cluster-scoped resources allowed

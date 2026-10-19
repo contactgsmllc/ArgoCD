@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: society-backend-service
+  labels:
+    app: society-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: society-backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP

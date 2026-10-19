@@ -1,0 +1,23 @@
+# Shared by society-backend, society-kafka and society-zookeeper (envFrom).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: society-backend-config
+data:
+  APP_FRONTEND_BASE_URL: http://society-frontend-service:80
+  DOCUMENT_UPLOAD_MAX_SIZE_BYTES: "10485760"
+  KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://society-kafka-service:9092
+  KAFKA_BROKER_ID: "1"
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+  KAFKA_ZOOKEEPER_CONNECT: society-zookeeper-service:2181
+  SPRING_FLYWAY_ENABLED: "true"
+  SPRING_FLYWAY_LOCATIONS: classpath:db/migration
+  SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+  SPRING_JPA_SHOW_SQL: "false"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: society-kafka-service:9092
+  SPRING_PROFILES_ACTIVE: dev
+  SPRINGDOC_API_DOCS_PATH: /v3/api-docs
+  SPRINGDOC_SWAGGER_UI_PATH: /swagger-ui/index.html
+  ZOOKEEPER_CLIENT_PORT: "2181"
+  ZOOKEEPER_TICK_TIME: "2000"

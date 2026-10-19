@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: society-zookeeper-service
+spec:
+  type: ClusterIP
+  selector:
+    app: society-zookeeper
+  ports:
+    - port: 2181
+      targetPort: 2181
+      protocol: TCP

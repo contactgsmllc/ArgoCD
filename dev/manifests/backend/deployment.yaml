@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: society-backend
+  labels:
+    app: society-backend
+spec:
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: society-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: society-backend
+    spec:
+      containers:
+        - name: society-backend
+          image: dearsrini/society-backend:dev
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: society-backend-secret
+            - configMapRef:
+                name: society-backend-config
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          startupProbe:          # Spring Boot on a Pi can take up to 6 min to start
+            tcpSocket: { port: 8080 }
+            periodSeconds: 5
+            failureThreshold: 72
+            timeoutSeconds: 2
+          readinessProbe:
+            tcpSocket: { port: 8080 }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket: { port: 8080 }
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 2
+          resources:
+            requests: { cpu: 250m, memory: 512Mi }
+            limits:   { cpu: 500m, memory: 1Gi }

@@ -1,0 +1,21 @@
+# Root "App of Apps" for the DEV cluster.
+# Apply ONCE by hand:  kubectl apply -f dev/root-app.yaml
+# After that, Argo CD creates every Application found in dev/apps/.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: society-dev-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:contactgsmllc/ArgoCD.git
+    targetRevision: main
+    path: dev/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false      # never delete an Application just because its file was removed
+      selfHeal: true

@@ -1,0 +1,6 @@
+# Never commit private keys or plain secrets
+*.key
+*-deploy
+*-deploy.pub
+*secret*.plain.yaml
+sealed-secrets-key*.yaml

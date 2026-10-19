@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: society
+resources:
+  - deployment.yaml
+  - service.yaml
+# The CI pipeline updates newTag on every push to the "dev" branch.
+images:
+  - name: dearsrini/society-frontend
+    newTag: dev

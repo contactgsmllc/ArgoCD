@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: society-backend
+  namespace: argocd
+spec:
+  project: society
+  source:
+    repoURL: git@github.com:contactgsmllc/ArgoCD.git
+    targetRevision: main
+    path: dev/manifests/backend
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: society
+  # Phase 4: start with manual sync. Once the diff is clean, uncomment "automated".
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
