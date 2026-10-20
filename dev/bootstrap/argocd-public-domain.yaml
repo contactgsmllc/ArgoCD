@@ -1,0 +1,66 @@
+# Public access to the Argo CD UI:  https://argocd.gsittech.com
+# Same pattern as the society app (gsittech-ingressroute):
+#   router 32.218.49.171 -> Traefik (MetalLB) -> this IngressRoute -> argocd-server
+# Apply once:  kubectl apply -f dev/bootstrap/argocd-public-domain.yaml
+---
+# 1) TLS certificate from Let's Encrypt (DNS-01 via Namecheap, same ClusterIssuer
+#    as gsittech.com). cert-manager renews it automatically.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: argocd-gsittech-tls
+  namespace: argocd
+spec:
+  secretName: argocd-gsittech-tls
+  dnsNames:
+    - argocd.gsittech.com
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+---
+# 2) Redirect plain http:// to https://
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: argocd
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+# 3) HTTPS route -> Argo CD UI
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`argocd.gsittech.com`)
+      services:
+        - name: argocd-server
+          port: 80            # plain HTTP inside the cluster; Traefik terminates TLS
+  tls:
+    secretName: argocd-gsittech-tls
+---
+# 4) HTTP route -> redirect to HTTPS
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server-http
+  namespace: argocd
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`argocd.gsittech.com`)
+      middlewares:
+        - name: redirect-https
+      services:
+        - name: argocd-server
+          port: 80

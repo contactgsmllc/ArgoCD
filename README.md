@@ -60,7 +60,16 @@ ssh -L 8080:localhost:8080 <user>@<kcontroller-tailscale-ip>
 ```
 Change the admin password after the first login (User Info → Update Password).
 
-**Permanent address (tailnet only):** expose the UI through the Tailscale operator:
+**Public address:** `https://argocd.gsittech.com` (DNS → router 32.218.49.171 → Traefik):
+```bash
+kubectl apply -f dev/bootstrap/argocd-public-domain.yaml
+kubectl -n argocd get certificate argocd-gsittech-tls   # READY=True after 1-3 min
+```
+This creates a Let's Encrypt certificate (auto-renewed by cert-manager), an
+HTTPS IngressRoute and an http→https redirect. The login page is reachable from
+the internet, so use a strong admin password and personal accounts.
+
+**Alternative, tailnet-only address:** expose the UI through the Tailscale operator:
 ```bash
 kubectl apply -f dev/bootstrap/argocd-ingress-tailscale.yaml
 kubectl -n argocd get ingress argocd-server-tailscale   # ADDRESS shows argocd-dev.<tailnet>.ts.net
