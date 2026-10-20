@@ -12,10 +12,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: society
-  # Phase 4: start with manual sync. Once the diff is clean, uncomment "automated".
+  # Auto-sync: Git changes are applied automatically.
+  #   prune    - resources removed from Git are removed from the cluster
+  #   selfHeal - manual kubectl changes are reverted to the Git state
   syncPolicy:
-    # automated:
-    #   prune: true
-    #   selfHeal: true
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=false
