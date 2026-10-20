@@ -5,4 +5,4 @@ resources:
   - society-backend-config.yaml
   - frontend-config.yaml
   - tailscale-app-ingress.yaml
-  # - society-backend-sealedsecret.yaml   # added in the Sealed Secrets step
+  - society-backend-sealedsecret.yaml     # encrypted; NEVER delete this file (see README)

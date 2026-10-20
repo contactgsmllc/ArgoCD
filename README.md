@@ -114,14 +114,16 @@ Argo CD sees the commit and rolls out the new version. See *How to deploy*.
 
 Install the controller (once per cluster):
 ```bash
-helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets && helm repo update
+helm repo add sealed-secrets https://bitnami.github.io/sealed-secrets && helm repo update
 helm install sealed-secrets sealed-secrets/sealed-secrets -n kube-system \
   --set fullnameOverride=sealed-secrets-controller
 ```
 Install the `kubeseal` CLI on kcontroller (arm64):
 ```bash
-KV=0.32.2   # check https://github.com/bitnami-labs/sealed-secrets/releases for latest
-curl -sSL https://github.com/bitnami-labs/sealed-secrets/releases/download/v$KV/kubeseal-$KV-linux-arm64.tar.gz | tar xz kubeseal
+# use the same version as the controller that was installed
+KV=$(kubectl -n kube-system get deploy sealed-secrets-controller -o jsonpath='{.spec.template.spec.containers[0].image}' | sed 's/.*:v\{0,1\}//')
+echo "kubeseal version: $KV"
+curl -sSL https://github.com/bitnami/sealed-secrets/releases/download/v$KV/kubeseal-$KV-linux-arm64.tar.gz | tar xz kubeseal
 sudo install -m 755 kubeseal /usr/local/bin/kubeseal && rm kubeseal
 ```
 **Back up the sealing key** (without it, sealed secrets cannot be decrypted if
@@ -144,6 +146,10 @@ kubectl -n society annotate secret society-backend-secret sealedsecrets.bitnami.
 # uncomment "- society-backend-sealedsecret.yaml" in dev/manifests/common/kustomization.yaml
 git add dev/manifests/common && git commit -m "dev: add sealed backend secret" && git push
 ```
+> ⚠️ After this, the Secret is **owned** by the SealedSecret. If the sealed file is
+> deleted from Git, Argo CD (prune) deletes the SealedSecret and Kubernetes deletes
+> the Secret with it. Never delete `society-backend-sealedsecret.yaml`.
+
 **To change a secret value later:** create the Secret YAML locally, pipe it
 through `kubeseal` exactly as above, commit the new sealed file. Never commit
 the plain Secret.
