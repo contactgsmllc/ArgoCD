@@ -69,14 +69,6 @@ This creates a Let's Encrypt certificate (auto-renewed by cert-manager), an
 HTTPS IngressRoute and an http→https redirect. The login page is reachable from
 the internet, so use a strong admin password and personal accounts.
 
-**Alternative, tailnet-only address:** expose the UI through the Tailscale operator:
-```bash
-kubectl apply -f dev/bootstrap/argocd-ingress-tailscale.yaml
-kubectl -n argocd get ingress argocd-server-tailscale   # ADDRESS shows argocd-dev.<tailnet>.ts.net
-```
-Then browse to `https://argocd-dev.tailfc43ba.ts.net` from any device on the tailnet.
-The port-forward method above still works as a fallback.
-
 ### Step 2 – Give Argo CD read access to this repo (deploy key)
 ```bash
 ssh-keygen -t ed25519 -N "" -C "argocd-dev" -f ~/argocd-dev-deploy
