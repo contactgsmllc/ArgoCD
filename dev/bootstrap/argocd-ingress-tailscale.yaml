@@ -1,0 +1,21 @@
+# Exposes the Argo CD UI on the tailnet only (not the public internet):
+#   https://argocd-dev.tailfc43ba.ts.net
+# Uses the same Tailscale operator + ProxyGroup as the society app (hoa-app).
+# Apply once:  kubectl apply -f dev/bootstrap/argocd-ingress-tailscale.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-tailscale
+  namespace: argocd
+  annotations:
+    tailscale.com/proxy-group: ingress-proxies
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: argocd-server
+      port:
+        number: 80          # plain HTTP inside the cluster; Tailscale provides HTTPS
+  tls:
+    - hosts:
+        - argocd-dev        # becomes argocd-dev.<tailnet>.ts.net
