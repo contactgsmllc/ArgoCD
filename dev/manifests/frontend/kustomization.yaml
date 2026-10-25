@@ -7,5 +7,4 @@ resources:
 # The CI pipeline updates newTag on every push to the "dev" branch.
 images:
   - name: dearsrini/society-frontend
-    newTag: d8bead4
-
+    newTag: bee305c

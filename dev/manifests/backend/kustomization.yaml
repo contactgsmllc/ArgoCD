@@ -8,4 +8,4 @@ resources:
 #   kustomize edit set image dearsrini/society-backend=dearsrini/society-backend:<commit-sha>
 images:
   - name: dearsrini/society-backend
-    newTag: dev
+    newTag: bee305c
