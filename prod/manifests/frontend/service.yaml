@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: society-frontend-service
+  namespace: society
+  labels:
+    app: society-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: society-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+

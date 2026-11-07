@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: society-zookeeper-prod
+  namespace: argocd
+spec:
+  project: societyargocd
+  source:
+    repoURL: git@github.com:contactgsmllc/ArgoCD.git
+    targetRevision: main
+    path: prod/manifests/zookeeper
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: societyargocd
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

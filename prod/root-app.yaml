@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: society-prod-root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:contactgsmllc/ArgoCD.git
+    targetRevision: main
+    path: prod/apps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true

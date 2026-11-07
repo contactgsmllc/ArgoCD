@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: society-backend
+  namespace: society
+  labels:
+    app: society-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: society-backend
+  template:
+    metadata:
+      labels:
+        app: society-backend
+    spec:
+      containers:
+      - name: society-backend
+        image: dearsrini/society-backend:test
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        envFrom:
+        - secretRef:
+            name: society-backend-secret
+        - configMapRef:
+            name: society-backend-config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+

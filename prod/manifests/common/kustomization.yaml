@@ -1,0 +1,6 @@
+kind: Kustomization
+namespace: societyargocd
+resources:
+  - society-backend-config.yaml
+  - frontend-config.yaml
+  # - society-backend-sealedsecret.yaml

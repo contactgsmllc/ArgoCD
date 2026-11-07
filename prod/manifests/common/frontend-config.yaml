@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: society
+data:
+  VITE_API_URL: "https://backend-service:8080"

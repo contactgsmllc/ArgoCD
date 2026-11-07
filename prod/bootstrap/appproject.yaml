@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: societyargocd
+  namespace: argocd
+spec:
+  sourceRepos:
+    - git@github.com:contactgsmllc/ArgoCD.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: societyargocd
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace

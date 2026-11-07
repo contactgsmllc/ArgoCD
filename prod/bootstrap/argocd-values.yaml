@@ -1,0 +1,23 @@
+# Helm values for Argo CD on the dev cluster (Raspberry Pi / arm64).
+# Install:
+#   helm repo add argo https://argoproj.github.io/argo-helm
+#   helm install argocd argo/argo-cd -n argocd --create-namespace -f dev/bootstrap/argocd-values.yaml
+dex:
+  enabled: false            # no SSO, local admin login only
+notifications:
+  enabled: false
+configs:
+  params:
+    server.insecure: true   # TLS is terminated by the ingress / port-forward
+controller:
+  resources:
+    requests: { cpu: 100m, memory: 256Mi }
+    limits:   { cpu: 500m, memory: 768Mi }
+repoServer:
+  resources:
+    requests: { cpu: 50m, memory: 128Mi }
+    limits:   { cpu: 500m, memory: 512Mi }
+server:
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits:   { cpu: 250m, memory: 256Mi }

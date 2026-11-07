@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: society-kafka
+  namespace: society
+  labels:
+    app: society-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: society-kafka
+  template:
+    metadata:
+      labels:
+        app: society-kafka
+    spec:
+      containers:
+      - name: kafka
+        image: confluentinc/cp-kafka:7.5.0
+        ports:
+        - containerPort: 9092
+        envFrom:
+        - configMapRef:
+            name: society-backend-config
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"

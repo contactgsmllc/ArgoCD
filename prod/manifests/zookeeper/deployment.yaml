@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: society-zookeeper
+  namespace: society
+  labels:
+    app: society-zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: society-zookeeper
+  template:
+    metadata:
+      labels:
+        app: society-zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: confluentinc/cp-zookeeper:7.5.0
+        ports:
+        - containerPort: 2181
+        envFrom:
+        - configMapRef:
+            name: society-backend-config
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
